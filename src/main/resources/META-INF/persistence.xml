@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+          http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+        version="2.0">
+    <persistence-unit name="cassandra-pu">
+		<provider>com.impetus.kundera.KunderaPersistence</provider>
+		<class>com.hyweb.tt.cms.cassandra.kundera.entites.PageDocument</class>
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+			<property name="jboss.as.jpa.managed" value="false" />
+			<property name="kundera.nodes" value="54.88.216.83" />
+			<property name="kundera.port" value="9160" />
+			<property name="kundera.keyspace" value="tt_keyspace" />
+			<property name="kundera.dialect" value="cassandra" />
+			<property name="kundera.ddl.auto.prepare" value="validate" />
+			<property name="kundera.client" value="thrift" />
+			<property name="kundera.client.lookup.class"
+				value="com.impetus.client.cassandra.thrift.ThriftClientFactory" />
+			<!-- <property name="kundera.cache.provider.class"
+				value="com.impetus.kundera.cache.ehcache.EhCacheProvider" />
+			<property name="kundera.cache.config.resource" value="/ehcache-test.xml" /> -->
+			<!-- <property name="kundera.client.property" value="KunderaClientProperties.xml" /> -->
+		</properties>
+	</persistence-unit>
+</persistence>

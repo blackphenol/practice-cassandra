@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clientProperties>
+	<datastores>
+		<dataStore>
+			<name>cassandra</name>
+			<connection>
+	           <!-- <properties>
+	           		<property name="cql.version" value="3.0.0"></property>                  
+	       		</properties> -->
+	       </connection>
+			<!-- <schemas>
+				<schema>
+					<name>tt_keyspace</name>
+					<tables>
+						<table>
+							<name>pagedoc_counter</name>
+							<properties>
+								<property name="default.validation.class" value="CounterColumnType"></property>
+								<property name="key.validation.class" value="UTF8Type"></property>
+							</properties>
+						</table>
+					</tables>
+				</schema>
+			</schemas> -->
+		</dataStore>
+	</datastores>
+</clientProperties>
