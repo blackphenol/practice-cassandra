@@ -69,8 +69,8 @@ public class DataKeeperDaoImpl implements DataKeeperDao
     {
         log.info(queryString);
         Query query = em.createQuery(queryString);
-        query.setFirstResult(start)
-        	 .setMaxResults(size);
+        query.setFirstResult(start);
+        query.setMaxResults(size);
         List<?> resultList = query.getResultList();
         return resultList;
     }
@@ -112,6 +112,16 @@ public class DataKeeperDaoImpl implements DataKeeperDao
             em.close();
         }
     }
+
+	@Override
+	public List<?>findByCQL(String cql){
+		 return em.createNativeQuery(cql).getResultList();
+	}
+
+	@Override
+	public int executeCQL(String cql) {
+		return  em.createNativeQuery(cql).executeUpdate();
+	}
 
    
 }

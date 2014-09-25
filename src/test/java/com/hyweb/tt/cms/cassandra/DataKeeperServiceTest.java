@@ -11,6 +11,9 @@ import com.hyweb.tt.cms.cassandra.kundera.entites.PageDocument;
 import com.hyweb.tt.cms.cassandra.kundera.services.DataKeeperService;
 import com.hyweb.tt.cms.cassandra.kundera.services.DataKeeperServiceImpl;
 
+/**
+ * test case of DataKeeperService
+ */
 public class DataKeeperServiceTest extends TestCase {
 
 	static ApplicationContext context =new ClassPathXmlApplicationContext("cassandraContext.xml");
@@ -20,68 +23,53 @@ public class DataKeeperServiceTest extends TestCase {
 		service = (DataKeeperService) context.getBean(DataKeeperServiceImpl.class);
 	}
 
-	public void testFindPageDocumentString() {
-		PageDocument pdoc = service.findPageDocument("p1");
-		assertEquals("pd1", pdoc.getPdocument());
-	}
-
-	public void testFindPageDocumentIntInt() {
-		List<PageDocument> pdocs = service.findPageDocument(1, 2);
-		assertEquals(2, pdocs.size());
-	}
-
-	public void testInsert() {
+	public void testServiceAPIs() {
+		
 		PageDocument newPDoc = new PageDocument();
 		newPDoc.setPkey("A");
 		newPDoc.setBackendpid("A");
 		newPDoc.setPdocument("A");
 		service.insert(newPDoc);
 		
-		PageDocument pdoc = service.findPageDocument("A");
+		newPDoc = new PageDocument();
+		newPDoc.setPkey("A1");
+		newPDoc.setBackendpid("A1");
+		newPDoc.setPdocument("A1");
+		service.insert(newPDoc);
+		
+		PageDocument pdoc = service.findPageDocumentByPKey("A");
 		assertNotNull(pdoc);
-	}
-
-	public void testUpdate() {
-		String bpid = "test update";
-		PageDocument pdoc = service.findPageDocument("p1");
-		pdoc.setBackendpid(bpid);
 		
+		pdoc = service.findPageDocumentByBackendpid("A1");
+		assertNotNull(pdoc);
+		
+		int start = 0;
+		int size = 2;
+		List<PageDocument> pdocs = service.findPageDocument(start, size);
+		assertEquals(size, pdocs.size());
+		
+		
+		pdoc.setPdocument("update A1");
 		service.update(pdoc);
-		pdoc = service.findPageDocument("p1");
-		assertEquals(bpid, pdoc.getBackendpid());
-	}
+		pdoc = service.findPageDocumentByPKey("A1");
+		assertEquals("update A1", pdoc.getPdocument());
+		
+		service.delete(pdoc);
+		assertNull(service.findPageDocumentByPKey("A1"));
+		
+		PageDocument newPDoc2 = new PageDocument();
+		newPDoc2.setPkey("B");
+		newPDoc2.setBackendpid("B");
+		newPDoc2.setPdocument("B");
+		service.insert(newPDoc2);
+		service.deletePageDocument("B");
+		assertNull(service.findPageDocumentByPKey("B"));
 
-	public void testDelete() {
-		PageDocument newPDoc = new PageDocument();
-		newPDoc.setPkey("delete");
-		newPDoc.setBackendpid("delete");
-		newPDoc.setPdocument("delete");
-		service.insert(newPDoc);
-		
-		service.delete(newPDoc);
-		
-		assertNull(service.findPageDocument("delete")); 
-	}
-
-	public void testDeletePageDocument() {
-		PageDocument newPDoc = new PageDocument();
-		newPDoc.setPkey("delete");
-		newPDoc.setBackendpid("delete");
-		newPDoc.setPdocument("delete");
-		service.insert(newPDoc);
-		
-		service.deletePageDocument("delete");
-		
-		assertNull(service.findPageDocument("delete"));
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-//		PageDocument pdoc = service.findPageDocument("A");
-//		pdoc.setBackendpid("b1");
-//		service.update(pdoc);
-		
-		service.deletePageDocument("A");
+
 	}
 	
 	

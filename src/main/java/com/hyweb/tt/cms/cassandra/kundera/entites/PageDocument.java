@@ -9,12 +9,15 @@ import com.impetus.kundera.index.Index;
 import com.impetus.kundera.index.IndexCollection;
 
 @Entity
-@IndexCollection(columns = { @Index(name = "key")})
+@IndexCollection(columns = { @Index(name = "backendpid")}) //secondary indexes
 @Table(name="pagedocument", schema="tt_keyspace@cassandra-pu")
 public class PageDocument {
 
+	/**
+	 * primary key
+	 */
 	@Id
-	@Column(name="key")
+	@Column(name="pkey")
 	private String pkey;
 	@Column(name="backendpid")
 	private String backendpid;

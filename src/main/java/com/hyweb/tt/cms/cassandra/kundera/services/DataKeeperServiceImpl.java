@@ -2,11 +2,6 @@ package com.hyweb.tt.cms.cassandra.kundera.services;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.Root;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -15,8 +10,7 @@ import org.springframework.stereotype.Service;
 import com.hyweb.tt.cms.cassandra.kundera.dao.DataKeeperDao;
 import com.hyweb.tt.cms.cassandra.kundera.entites.PageDocument;
 /**
- * @author Kuldeep.Mishra
- * 
+ * implement DataKeeper Service
  */
 @Service
 @Scope("singleton")
@@ -28,6 +22,9 @@ public class DataKeeperServiceImpl implements DataKeeperService
     
 	private final Logger logger = Logger.getLogger(this.getClass());
 	
+	/**
+	 * inject dao activities
+	 */
     @Autowired
     private DataKeeperDao dao;
 
@@ -52,16 +49,27 @@ public class DataKeeperServiceImpl implements DataKeeperService
 
 
 
-	public PageDocument findPageDocument(String pkey) {
+	public PageDocument findPageDocumentByPKey(String pkey) {
 		
 		return dao.findById(PageDocument.class, pkey);
 	}
-
-
-
-
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public PageDocument findPageDocumentByBackendpid(String backendpid) {
+		String jpql = "select n from PageDocument n where n.backendpid=:backendpid";
+		List<PageDocument> result = (List<PageDocument>) dao.findByQuery(jpql, "backendpid", backendpid);
+		if(result!=null && result.size()==1){
+			return result.get(0);
+		}
+		
+		return null; 
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<PageDocument> findPageDocument(int start, int size) {
-		return (List<PageDocument>) dao.findByQuery("select * from PageDocument", start, size);
+		String jpql = "select n from PageDocument n";
+		return (List<PageDocument>) dao.findByQuery(jpql, start, size);
 	}
 
 
@@ -92,19 +100,10 @@ public class DataKeeperServiceImpl implements DataKeeperService
 
 	@Override
 	public void deletePageDocument(String pKey) {
-		EntityManager em = dao.getEntityManager();
-//		CriteriaBuilder cb = em.getCriteriaBuilder();
-//		CriteriaDelete<PageDocument> delete = cb.createCriteriaDelete(PageDocument.class);
-//		  
-//		  // set the root class
-//		  Root e = delete.from(PageDocument.class);
-//		  
-//		  // set where clause
-//		  delete.where(cb.equal(e.get("key"), pKey));
-		  
-		  // perform update
-		 String delete = "delete from PageDocument where pKey='"+pKey+"'";
-		  em.createQuery(delete).executeUpdate(); 
+		String cql = "delete from pagedocument where pkey='"+pKey+"'";
+		dao.executeCQL(cql);
 		
 	}
+
+
 }
