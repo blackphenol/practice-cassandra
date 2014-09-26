@@ -97,7 +97,10 @@ public class DataKeeperServiceImpl implements DataKeeperService
 
 
 
-
+	/**
+	 * @deprecated use {@link #delete(Object)} to delete entity
+	 * 先不要用，用此刪除後，如果再新增一個新的 entity, pkey 跟刪除的一樣，會造成無法新增的情況 
+	 */
 	@Override
 	public void deletePageDocument(String pKey) {
 		String cql = "delete from pagedocument where pkey='"+pKey+"'";

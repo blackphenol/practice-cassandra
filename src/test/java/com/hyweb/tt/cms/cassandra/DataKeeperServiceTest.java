@@ -21,33 +21,33 @@ public class DataKeeperServiceTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		service = (DataKeeperService) context.getBean(DataKeeperServiceImpl.class);
-	}
+		
+		PageDocument newPDoc2 = new PageDocument();
+		newPDoc2.setPkey("A2");
+		newPDoc2.setBackendpid("A2");
+		newPDoc2.setPdocument("A2");
+		service.insert(newPDoc2);
 
-	public void testServiceAPIs() {
-		
 		PageDocument newPDoc = new PageDocument();
-		newPDoc.setPkey("A");
-		newPDoc.setBackendpid("A");
-		newPDoc.setPdocument("A");
-		service.insert(newPDoc);
-		
-		newPDoc = new PageDocument();
 		newPDoc.setPkey("A1");
 		newPDoc.setBackendpid("A1");
 		newPDoc.setPdocument("A1");
 		service.insert(newPDoc);
 		
-		PageDocument pdoc = service.findPageDocumentByPKey("A");
+	}
+
+	public void testServiceAPIs() {
+		
+		PageDocument pdoc = service.findPageDocumentByPKey("A1");
 		assertNotNull(pdoc);
 		
-		pdoc = service.findPageDocumentByBackendpid("A1");
-		assertNotNull(pdoc);
+		PageDocument pdoc2 = service.findPageDocumentByBackendpid("A2");
+		assertNotNull(pdoc2);
 		
 		int start = 0;
 		int size = 2;
 		List<PageDocument> pdocs = service.findPageDocument(start, size);
 		assertEquals(size, pdocs.size());
-		
 		
 		pdoc.setPdocument("update A1");
 		service.update(pdoc);
@@ -57,14 +57,10 @@ public class DataKeeperServiceTest extends TestCase {
 		service.delete(pdoc);
 		assertNull(service.findPageDocumentByPKey("A1"));
 		
-		PageDocument newPDoc2 = new PageDocument();
-		newPDoc2.setPkey("B");
-		newPDoc2.setBackendpid("B");
-		newPDoc2.setPdocument("B");
-		service.insert(newPDoc2);
-		service.deletePageDocument("B");
-		assertNull(service.findPageDocumentByPKey("B"));
-
+		service.delete(pdoc2);
+//		service.deletePageDocument("A2");
+		assertNull(service.findPageDocumentByPKey("A2"));
+		
 	}
 
 	@Override
